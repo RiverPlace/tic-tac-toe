@@ -1,0 +1,12 @@
+.gameboard {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    width: 300px;
+}
+
+.field {
+    width: 80px;
+    height: 80px;
+    background-color: aliceblue;
+    margin: 8px;
+}
