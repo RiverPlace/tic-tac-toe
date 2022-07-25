@@ -9,4 +9,9 @@
     height: 80px;
     background-color: aliceblue;
     margin: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    font-weight: bold;
 }

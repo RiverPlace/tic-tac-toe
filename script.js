@@ -3,12 +3,14 @@ const GameBoard = ((doc) => {
     - Display gameboard in DOM
     - Update board UI
      */
-    const board = ['X', 'X', 'O', 'X', 'O', 'O', 'X', 'O', 'O']
+    const board = ['', '', '', '', '', '', '', '', '']
     const fields = doc.querySelectorAll('.field')
 
     fields.forEach(field => {
         field.addEventListener('click', (e) => {
-            console.log(e.target)
+            let playerMove = e.target.dataset.index
+            console.log('Player Move: ', playerMove)
+            GameController.makeMove(playerMove)
         })
     })
 
@@ -19,9 +21,19 @@ const GameBoard = ((doc) => {
     }
 
     return {
+        board,
         updateDisplay,
     }
 })(document)
+
+const Player = (sign) => {
+    this.sign = sign
+    const getSign = () => {
+        return sign
+    }
+
+    return {getSign}
+}
 
 const GameController = (() => {
     /*
@@ -29,12 +41,21 @@ const GameController = (() => {
     - Reset game
     - Determine winner or tie
      */
-})()
+    const playerX = Player('X')
+    const playerO = Player('O')
+    let turn = 1
 
-const Player = (sign) => {
-    /*
-    - Get sign
-     */
-}
+    const makeMove = (index) => {
+        let playerTurn = turn % 2 === 1 ? playerX.getSign() : playerO.getSign()
+        turn++
+
+        GameBoard.board[index] = playerTurn
+        GameBoard.updateDisplay()
+    }
+
+    return {
+        makeMove,
+    }
+})()
 
 GameBoard.updateDisplay()
