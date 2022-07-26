@@ -9,7 +9,6 @@ const GameBoard = ((doc) => {
     fields.forEach(field => {
         field.addEventListener('click', (e) => {
             let playerMove = e.target.dataset.index
-            console.log('Player Move: ', playerMove)
             GameController.makeMove(playerMove)
         })
     })
@@ -20,9 +19,15 @@ const GameBoard = ((doc) => {
         }
     }
 
+    const updateMessage = (str) => {
+        let gameMessage = doc.querySelector('.message')
+        gameMessage.textContent = str
+    }
+
     return {
         board,
         updateDisplay,
+        updateMessage,
     }
 })(document)
 
@@ -43,18 +48,35 @@ const GameController = (() => {
      */
     const playerX = Player('X')
     const playerO = Player('O')
+    const winScenarios = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6]
+    ]
     let turn = 1
 
     const makeMove = (index) => {
         let playerTurn = turn % 2 === 1 ? playerX.getSign() : playerO.getSign()
+        let nextPlayer = playerTurn === 'X' ? 'O' : 'X'
         turn++
 
         GameBoard.board[index] = playerTurn
         GameBoard.updateDisplay()
+        GameBoard.updateMessage(`Player ${nextPlayer}'s move.`)
+    }
+
+    const checkForWin = () => {
+
     }
 
     return {
         makeMove,
+        checkForWin,
     }
 })()
 
