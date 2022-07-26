@@ -58,6 +58,15 @@ const GameController = (() => {
         [0, 4, 8],
         [2, 4, 6]
     ]
+
+    const checkForWin = (player) => {
+        winScenarios.forEach(arr => {
+            if (arr.every(index => GameBoard.board[index] === player)) {
+                GameBoard.updateMessage(`Player ${player} wins!`)
+            }
+        })
+    }
+
     let turn = 1
 
     const makeMove = (index) => {
@@ -68,10 +77,9 @@ const GameController = (() => {
         GameBoard.board[index] = playerTurn
         GameBoard.updateDisplay()
         GameBoard.updateMessage(`Player ${nextPlayer}'s move.`)
-    }
-
-    const checkForWin = () => {
-
+        if (turn > 5) {
+            checkForWin(playerTurn)
+        }
     }
 
     return {
