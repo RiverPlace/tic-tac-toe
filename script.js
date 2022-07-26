@@ -9,6 +9,7 @@ const GameBoard = ((doc) => {
     fields.forEach(field => {
         field.addEventListener('click', (e) => {
             let playerMove = e.target.dataset.index
+            if (board[playerMove]) return
             GameController.makeMove(playerMove)
         })
     })
@@ -72,8 +73,8 @@ const GameController = (() => {
     const makeMove = (index) => {
         let playerTurn = turn % 2 === 1 ? playerX.getSign() : playerO.getSign()
         let nextPlayer = playerTurn === 'X' ? 'O' : 'X'
-        turn++
 
+        turn++
         GameBoard.board[index] = playerTurn
         GameBoard.updateDisplay()
         GameBoard.updateMessage(`Player ${nextPlayer}'s move.`)
@@ -84,7 +85,6 @@ const GameController = (() => {
 
     return {
         makeMove,
-        checkForWin,
     }
 })()
 
