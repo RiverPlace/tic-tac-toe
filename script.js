@@ -1,9 +1,5 @@
 const GameBoard = ((doc) => {
-    /*
-    - Display gameboard in DOM
-    - Update board UI
-     */
-    const board = ['', '', '', '', '', '', '', '', '']
+    let board = ['', '', '', '', '', '', '', '', '']
     const fields = doc.querySelectorAll('.field')
 
     fields.forEach(field => {
@@ -25,28 +21,27 @@ const GameBoard = ((doc) => {
         gameMessage.textContent = str
     }
 
+    const resetGame = () => {
+        for (let i = 0; i < board.length; i++) {
+            board[i] = ''
+        }
+        fields.forEach(field => field.textContent = '')
+    }
+
     return {
         board,
         updateDisplay,
         updateMessage,
+        resetGame,
     }
 })(document)
 
 const Player = (sign) => {
-    this.sign = sign
-    const getSign = () => {
-        return sign
-    }
-
+    const getSign = () => sign
     return {getSign}
 }
 
 const GameController = (() => {
-    /*
-    - Make Player move
-    - Reset game
-    - Determine winner or tie
-     */
     const playerX = Player('X')
     const playerO = Player('O')
     const winScenarios = [
@@ -59,27 +54,40 @@ const GameController = (() => {
         [0, 4, 8],
         [2, 4, 6]
     ]
-
-    const checkForWin = (player) => {
-        winScenarios.forEach(arr => {
-            if (arr.every(index => GameBoard.board[index] === player)) {
-                GameBoard.updateMessage(`Player ${player} wins!`)
-            }
-        })
-    }
-
     let turn = 1
 
+    const checkForWin = (player) => {
+        let win = false
+        winScenarios.forEach(arr => {
+            if (arr.every(index => GameBoard.board[index] === player)) {
+                win = true
+            }
+        })
+        return win
+    }
+
     const makeMove = (index) => {
-        let playerTurn = turn % 2 === 1 ? playerX.getSign() : playerO.getSign()
-        let nextPlayer = playerTurn === 'X' ? 'O' : 'X'
+        const playerMove = turn % 2 === 1 ? playerX.getSign() : playerO.getSign()
+        const nextPlayer = playerMove === 'X' ? 'O' : 'X'
+        GameBoard.board[index] = playerMove
+
+        if (checkForWin(playerMove)) {
+            console.log('WIN!!!')
+            GameBoard.updateMessage(`Player ${playerMove} wins!`)
+            GameBoard.resetGame()
+            turn = 1
+            return
+        }
+        // console.log('Board: ', GameBoard.board)
+        // console.log('Move: ', playerMove)
 
         turn++
-        GameBoard.board[index] = playerTurn
+
         GameBoard.updateDisplay()
         GameBoard.updateMessage(`Player ${nextPlayer}'s move.`)
+        
         if (turn > 5) {
-            checkForWin(playerTurn)
+            checkForWin(playerMove)
         }
     }
 
